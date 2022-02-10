@@ -1,77 +1,69 @@
 'use strict';
-// document.querySelector('.message').textContent = 'Correct number!';
 
-// document.querySelector('.number').textContent = 13;
-// document.querySelector('.score').textContent = 10;
+let score = 0;
+let quizAns;
 
-// document.querySelector('.guess').value = 22;
-let secretNumber = Math.trunc(Math.random() * 20) + 1;
-console.log(secretNumber);
-let score = 20;
-let highscore = 0;
+//initialize function : reset the quiz question
+const initQuiz = function () {
+  let quizNum1 = Math.trunc(Math.random() * 20);
+  let quizNum2 = Math.trunc(Math.random() * 20);
+  let quizOperator = Math.trunc(Math.random() * 2);
+  let quizAns = quizOperator === 0 ? quizNum1 + quizNum2 : quizNum1 - quizNum2;
+  let quiz =
+    quizOperator === 0
+      ? `${quizNum1} + ${quizNum2} =`
+      : `${quizNum1} - ${quizNum2} =`;
+  return { quiz, quizAns };
+};
+const getQuiz = function (quizObj) {
+  document.querySelector('.question').textContent = quizObj.quiz;
+  quizAns = quizObj.quizAns;
+};
+getQuiz(initQuiz());
 
+//Message Displaying
 const displayMessage = function (message) {
   document.querySelector('.message').textContent = message;
 };
 
 document.querySelector('.check').addEventListener('click', function () {
-  const guess = Number(document.querySelector('.guess').value);
-  console.log(guess);
+  const playerAns = Number(document.querySelector('.guess').value);
+  //Player doesn't input any answer
+  if (!playerAns) {
+    displayMessage('No Answer!');
 
-  if (!guess) {
-    // document.querySelector('.message').textContent = 'No number!';
-    displayMessage('No number!');
-  } else if (guess === secretNumber) {
-    //  document.querySelector('.message').textContent = 'Correct Number!';
-    displayMessage('Correct Number!');
-    document.querySelector('body').style.backgroundColor = '#60b347';
-    document.querySelector('.number').style.width = '30rem';
-    document.querySelector('.number').textContent = secretNumber;
-    if (score > highscore) {
-      highscore = score;
-      document.querySelector('.highscore').textContent = highscore;
-    }
-  } else if (guess != secretNumber) {
-    if (score > 1) {
-      document.querySelector('.message').textContent =
-        guess > secretNumber ? 'Too High!' : 'Too Low!';
-      score--;
-      document.querySelector('.score').textContent = score;
+    //player gets the correct answer
+  } else if (playerAns === quizAns) {
+    score += 20;
+    document.querySelector('.score').textContent = score;
+    //5 questions answered, player passes the quiz
+    if (score === 100) {
+      getQuiz('HOORAY! You pass the quiz!');
+      displayMessage('HOORAY! You pass the quiz!');
+      document.querySelector('body').style.backgroundColor = '#60b347';
+      document.querySelector('.number').style.width = '30rem';
+      document.querySelector('.number').textContent = '^_^';
+      //less than 5 questions
     } else {
-      // document.querySelector('.message').textContent = 'You lost the game!';
-      displayMessage('You lost the game!');
-      document.querySelector('.score').textContent = 0;
+      displayMessage('Correct answer! Go next!');
+      //initialize the next question
+      getQuiz(initQuiz());
     }
+
+    //player gets the wrong answer
+  } else if (playerAns != quizAns) {
+    displayMessage('Wrong answer T T, try again!');
   }
-  //  else if (guess > secretNumber) {
-  //   if (score > 0) {
-  //     document.querySelector('.message').textContent = 'Too high!';
-  //     score--;
-  //     document.querySelector('.score').textContent = score;
-  //   } else {
-  //     document.querySelector('.message').textContent = 'You lost the game!';
-  //     document.querySelector('.score').textContent = 0;
-  //   }
-  // } else if (guess < secretNumber) {
-  //   if (score > 0) {
-  //     document.querySelector('.message').textContent = 'Too low!';
-  //     score--;
-  //     document.querySelector('.score').textContent = score;
-  //   } else {
-  //     document.querySelector('.message').textContent = 'You lost the game!';
-  //     document.querySelector('.score').textContent = 0;
-  //   }
-  // }
 });
 
-document.querySelector('.again').addEventListener('click', function () {
-  secretNumber = Math.trunc(Math.random() * 20) + 1;
-  score = 20;
-  // document.querySelector('.message').textContent = 'Start guessing...';
-  displayMessage('Start guessing...');
+//replay button
+document.querySelector('.replay').addEventListener('click', function () {
+  score = 0;
+  displayMessage('Start the Quiz!');
   document.querySelector('body').style.backgroundColor = '#222';
   document.querySelector('.number').style.width = '15rem';
   document.querySelector('.number').textContent = '?';
   document.querySelector('.guess').value = '';
-  document.querySelector('.score').textContent = 20;
+  document.querySelector('.score').textContent = 0;
+  getQuiz(initQuiz());
 });
