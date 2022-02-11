@@ -2,6 +2,29 @@
 
 let score = 0;
 let quizAns;
+let count = 20;
+
+//Timer
+let quizTimer;
+function countdown() {
+  quizTimer = setInterval(function () {
+    document.querySelector('.setTimer').textContent = count;
+    if (count === 0) timeIsUp();
+    count--;
+    // console.log(count);
+  }, 1000);
+}
+
+function timeIsUp() {
+  clearInterval(quizTimer);
+  if (score < 100) {
+    displayMessage('You failed the quiz!!');
+    document.querySelector('body').style.backgroundColor = '#990f02';
+    document.querySelector('.number').textContent = 'T_T';
+    document.querySelector('.number').style.width = '18rem';
+  }
+}
+countdown();
 
 //initialize function : reset the quiz question
 const initQuiz = function () {
@@ -15,6 +38,7 @@ const initQuiz = function () {
       : `${quizNum1} - ${quizNum2} =`;
   return { quiz, quizAns };
 };
+
 //Displaying the quiz and get the correct answer of the question
 const getQuiz = function (quizObj) {
   document.querySelector('.question').textContent = quizObj.quiz;
@@ -58,7 +82,7 @@ document.querySelector('.check').addEventListener('click', function () {
   } else if (playerAns != quizAns) {
     score -= 10;
     document.querySelector('.score').textContent = score;
-    displayMessage('Wrong answer T T, try again!');
+    displayMessage('Wrong answer, try again!');
   }
 });
 
@@ -72,4 +96,7 @@ document.querySelector('.replay').addEventListener('click', function () {
   document.querySelector('.guess').value = '';
   document.querySelector('.score').textContent = 0;
   getQuiz(initQuiz());
+  clearInterval(quizTimer);
+  count = 20;
+  countdown();
 });

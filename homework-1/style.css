@@ -69,11 +69,11 @@ h1 {
   transform: translate(-50%, 50%);
 }
 
-.between {
-  font-size: 1.4rem;
+.timer {
+  font-size: 2rem;
   position: absolute;
-  top: 2rem;
-  right: 2rem;
+  top: 4rem;
+  right: 12rem;
 }
 
 .replay {
