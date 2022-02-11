@@ -15,6 +15,7 @@ const initQuiz = function () {
       : `${quizNum1} - ${quizNum2} =`;
   return { quiz, quizAns };
 };
+//Displaying the quiz and get the correct answer of the question
 const getQuiz = function (quizObj) {
   document.querySelector('.question').textContent = quizObj.quiz;
   quizAns = quizObj.quizAns;
@@ -26,6 +27,7 @@ const displayMessage = function (message) {
   document.querySelector('.message').textContent = message;
 };
 
+//'Check' button click - Answer validation
 document.querySelector('.check').addEventListener('click', function () {
   const playerAns = Number(document.querySelector('.guess').value);
   //Player doesn't input any answer
@@ -34,10 +36,12 @@ document.querySelector('.check').addEventListener('click', function () {
 
     //player gets the correct answer
   } else if (playerAns === quizAns) {
+    //update the score
     score += 20;
     document.querySelector('.score').textContent = score;
+
     //5 questions answered, player passes the quiz
-    if (score === 100) {
+    if (score >= 100) {
       getQuiz('HOORAY! You pass the quiz!');
       displayMessage('HOORAY! You pass the quiz!');
       document.querySelector('body').style.backgroundColor = '#60b347';
@@ -52,11 +56,13 @@ document.querySelector('.check').addEventListener('click', function () {
 
     //player gets the wrong answer
   } else if (playerAns != quizAns) {
+    score -= 10;
+    document.querySelector('.score').textContent = score;
     displayMessage('Wrong answer T T, try again!');
   }
 });
 
-//replay button
+//replay button(reset the quiz)
 document.querySelector('.replay').addEventListener('click', function () {
   score = 0;
   displayMessage('Start the Quiz!');
